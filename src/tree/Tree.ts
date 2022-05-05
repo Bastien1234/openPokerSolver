@@ -1,5 +1,5 @@
-import { TreeNode } from './Node';
-import RangeMaker from './RangeMaker';
+import { TreeNode } from './Node.ts';
+import RangeMaker from './RangeMaker.ts';
 
 const rangeMaker = new RangeMaker();
 
@@ -40,8 +40,8 @@ class Tree
         this.ipRaises = ipRaises;
         this.maxRaises = 3; // to change later
 
-        const oopRangeFlat = rangeMaker.weightedListToFlatList(oopRange);
-        const ipRangeFlat = rangeMaker.weightedListToFlatList(ipRange);
+        // const oopRangeFlat = rangeMaker.weightedListToFlatList(oopRange);
+        // const ipRangeFlat = rangeMaker.weightedListToFlatList(ipRange);
     }
 
     makeRiverTree()
@@ -60,8 +60,12 @@ class Tree
             "root"
         );
 
+        let cameOnBuildFromNode = 0;
+
         const buildFromNode = (node:TreeNode) =>
         {
+            cameOnBuildFromNode ++;
+
             for (let action of node.actions)
             {
                 let rangeToAdd: string[][] = [];
@@ -151,12 +155,92 @@ class Tree
                     // convert int to actual numer (3500 to 3.5 times raise)
                     let betValue = (action * node.potSize) / 100;
 
-                    if ()
+                    if (betValue >= node.effectiveSize)
+                    {
+                        // all in situation : bet all in...
+                        let bet = (node.potSize / node.effectiveSize) * 100;
+                        const n = new TreeNode(
+                            rangeToAdd,
+                            betsToAdd,
+                            raisesToAdd,
+                            node.raiseLevel + 1,
+                            node.potSize + bet,
+                            node.effectiveSize - bet,
+                            bet,
+                            newPlayerTurn,
+                            "fc"
+                        )
+                        node.postActionNodes[action] = n;
+                        buildFromNode(n);
+                    }
+
+                    else
+                    {
+                        const n = new TreeNode(
+                            rangeToAdd,
+                            betsToAdd,
+                            raisesToAdd,
+                            node.raiseLevel + 1,
+                            node.potSize + betValue,
+                            node.effectiveSize - betValue,
+                            betValue,
+                            newPlayerTurn,
+                            "fcr" 
+                        )
+                        if (n.raiseLevel<3)
+                            buildFromNode(n);
+                    }
+                }
+
+                else if(action > 1000)
+                {
+                    let raiseValue = (action * node.currentFacingBet) / 1000;
+                    const THREASHOLD = 0.6 * node.effectiveSize;
+                    if (raiseValue > THREASHOLD)
+                    {
+                        raiseValue = node.effectiveSize;
+                        const n = new TreeNode(
+                            rangeToAdd,
+                            betsToAdd,
+                            raisesToAdd,
+                            node.raiseLevel + 1,
+                            node.potSize + raiseValue,
+                            node.effectiveSize - raiseValue,
+                            raiseValue,
+                            newPlayerTurn,
+                            "fc" 
+                        )
+                        node.postActionNodes[action] = n;
+                        buildFromNode(n);
+                    }
+
+                    else 
+                    {
+                        const n = new TreeNode(
+                            rangeToAdd,
+                            betsToAdd,
+                            raisesToAdd,
+                            node.raiseLevel + 1,
+                            node.potSize + raiseValue,
+                            node.effectiveSize - raiseValue,
+                            raiseValue,
+                            newPlayerTurn,
+                            "fcr"
+                        )
+                        node.postActionNodes[action] = n;
+                        buildFromNode(n);
+                    }
                 }
             }
         }
+
+        buildFromNode(this.root);
+
+        console.log("finished building tree, came on build from node function ", cameOnBuildFromNode, " times");
 
     }
 
 
 }
+
+export default Tree;

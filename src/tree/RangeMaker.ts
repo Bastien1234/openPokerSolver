@@ -117,19 +117,18 @@ class RangeMaker
         return finalVector;
     }
 
-    weightedListToFlatList(list: string[][]): string[][]
-    {
-        let vectorToReturn: string[][] = [];
-        for (let el of list)
-        {
-            if (list.includes(el))
-            {
-                vectorToReturn.push(el);
-            }
-        }
+    // weightedListToFlatList(list: string[][]): string[][]
+    // {
+    //     let vectorToReturn: string[][] = [];
 
-        return vectorToReturn;
-    }
+    //     list.forEach(el => {
+    //         if (!vectorToReturn.includes(el)) {
+    //             vectorToReturn.push(el);
+    //         }
+    //     })
+
+    //     return vectorToReturn;
+    // }
 
 
 }

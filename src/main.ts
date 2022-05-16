@@ -62,7 +62,7 @@ function main()
         effectiveStack,
         handsOOP,
         handsIP,
-        [23, 60, 120],
+        [24, 60, 120],
         [2500, 3500],
         [33, 60, 125],
         [2700, 3200],
@@ -74,6 +74,8 @@ function main()
     */
 
     tree.makeRiverTree();
+
+    console.log(tree)
 
     // Memoization
     interface hashMap { [key: string]: number; }

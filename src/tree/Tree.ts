@@ -60,9 +60,11 @@ class Tree
             "root"
         );
 
+        console.log("made root");
+
         let cameOnBuildFromNode = 0;
 
-        const buildFromNode = (node:TreeNode) =>
+        const buildFromNode = (node: TreeNode) =>
         {
             cameOnBuildFromNode ++;
 
@@ -111,7 +113,8 @@ class Tree
                             "fc"
                         );
                         // build here ?
-                        buildFromNode(n);
+                        node.postActionNodes[action] = n;
+                        // buildFromNode(n);
                     }
                     else 
                     {
@@ -134,6 +137,7 @@ class Tree
                 // Open check
                 else if (action === -1)
                 {
+                    console.log("we check !")
                     const n = new TreeNode(
                         rangeToAdd,
                         betsToAdd,
@@ -152,6 +156,7 @@ class Tree
                 // Bet
                 else if (action > 0 && action < 1000)
                 {
+                    console.log("we bet ", action," percents of the pot !")
                     // convert int to actual numer (3500 to 3.5 times raise)
                     let betValue = (action * node.potSize) / 100;
 
@@ -176,6 +181,7 @@ class Tree
 
                     else
                     {
+                        console.log("booooom")
                         const n = new TreeNode(
                             rangeToAdd,
                             betsToAdd,
@@ -187,17 +193,25 @@ class Tree
                             newPlayerTurn,
                             "fcr" 
                         )
-                        if (n.raiseLevel<3)
+                        if (n.raiseLevel<3) {
+                            console.log("we must be here")
+                            node.postActionNodes[action] = n;
                             buildFromNode(n);
+                        }
+                        else {
+                            console.log("waaaat")
+                        }
                     }
                 }
 
                 else if(action > 1000)
                 {
+                    console.log("we raise, for ", action)
                     let raiseValue = (action * node.currentFacingBet) / 1000;
                     const THREASHOLD = 0.6 * node.effectiveSize;
                     if (raiseValue > THREASHOLD)
                     {
+                        console.log("we raise, for all in !")
                         raiseValue = node.effectiveSize;
                         const n = new TreeNode(
                             rangeToAdd,
@@ -216,6 +230,7 @@ class Tree
 
                     else 
                     {
+                        console.log("we raise, for  ", action)
                         const n = new TreeNode(
                             rangeToAdd,
                             betsToAdd,
@@ -233,6 +248,8 @@ class Tree
                 }
             }
         }
+
+        console.log("before building from root node, root actions : ", this.root.actions)
 
         buildFromNode(this.root);
 

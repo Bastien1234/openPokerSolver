@@ -63,6 +63,12 @@ class TreeNode
         this.raises = raises;
         this.nodeType = nodeType;
 
+        this.postActionNodes = {};
+        this.globalActionMap = {};
+        this.localActionMap = {};
+        this.globalBestScore = Number.MIN_VALUE;
+
+
         // pointers to next node
         // Creating the global action map
         switch(nodeType)

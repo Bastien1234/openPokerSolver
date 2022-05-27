@@ -67,10 +67,11 @@ class Tree
         const buildFromNode = (node: TreeNode) =>
         {
             cameOnBuildFromNode ++;
-            const actions = node.actions
+            // const actions = node.actions
 
-            for (let action of actions)
+            for (let action of node.actions)
             {
+                console.log("the action : ", action);
                 let building: boolean = true;
                 console.log(action);
                 
@@ -156,6 +157,27 @@ class Tree
                     );
                 }
 
+                // Check back
+                else if (action === 0 || action === -2 || action === -3)
+                {
+                    console.log("getting to check back")
+                    /*
+                    n = new TreeNode(
+                        rangeToAdd,
+                        betsToAdd,
+                        raisesToAdd,
+                        node.raiseLevel,
+                        node.potSize,
+                        node.effectiveSize,
+                        0,
+                        newPlayerTurn,
+                        "xbb"
+                    );
+                    */
+
+                    building = false;
+                }
+
                 // Bet
                 else if (action > 0 && action < 1000)
                 {
@@ -234,18 +256,20 @@ class Tree
                 if (building === true)
                 {
                     node.postActionNodes[action] = n;
+                    console.log(n)
                     buildFromNode(n);
                 }
-                else 
-                {
-                    node.postActionNodes[action] = n;
-                } 
+                // else 
+                // {
+                //     node.postActionNodes[action] = n;
+                // }
             }
         }
 
         console.log("before building from root node, root actions : ", this.root.actions)
 
         buildFromNode(this.root);
+        console.log(this.root)
 
         console.log("finished building tree, came on build from node function ", cameOnBuildFromNode, " times");
 

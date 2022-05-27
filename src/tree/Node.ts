@@ -75,6 +75,8 @@ class TreeNode
         {
             case "fcr":
                 this.actions = this.raises;
+                this.actions.push(-3);
+                this.actions.push(-2);
                 let defaultValue: number = (100 / this.actions.length);
                 for (let act of this.actions)
                 {
@@ -92,22 +94,10 @@ class TreeNode
 
             case "xbb":
                 this.actions.push(0);
-                this.postActionNodes[0] = null;
                 for (let act of this.actions)
                 {
                     this.postActionNodes[act] = null;
                 }
-                break;
-
-            case "fcr":
-                this.actions.push(-2);
-                this.actions.push(-3);
-                this.postActionNodes[-2] = null;
-                this.postActionNodes[-3] = null;
-                for (let act of this.actions)
-                {
-                    this.postActionNodes[act] = null;
-                };
                 break;
             
             case "fc":
